@@ -2,6 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 export default function Home() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<
@@ -15,9 +22,12 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [listening, setListening] = useState(false);
 
-  // 🎤 Função de voz (TTS)
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // 🔊 Função TTS
   function speak(text: string) {
     if (!voiceEnabled) return;
 
@@ -34,10 +44,58 @@ export default function Home() {
     }
   }
 
-  async function sendMessage() {
-    if (!input.trim()) return;
+  // 🎤 Inicializar reconhecimento de voz
+  useEffect(() => {
+    if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
+      console.warn("Reconhecimento de voz não suportado neste navegador.");
+      return;
+    }
 
-    const newMsg = { sender: "user" as const, text: input };
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "pt-BR";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setListening(true);
+    };
+
+    recognition.onend = () => {
+      setListening(false);
+    };
+
+    recognition.onerror = (e: any) => {
+      console.error("Erro no microfone:", e);
+      setListening(false);
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      console.log("🎤 Você falou:", transcript);
+
+      setInput(transcript);
+      sendMessage(transcript);
+    };
+
+    recognitionRef.current = recognition;
+  }, []);
+
+  function startListening() {
+    if (recognitionRef.current) {
+      recognitionRef.current.start();
+    }
+  }
+
+  async function sendMessage(text?: string) {
+    const messageToSend = text || input;
+
+    if (!messageToSend.trim()) return;
+
+    const newMsg = { sender: "user" as const, text: messageToSend };
 
     setMessages((prev) => [...prev, newMsg]);
     setLoading(true);
@@ -47,7 +105,7 @@ export default function Home() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: messageToSend }),
       });
 
       const data = await res.json();
@@ -59,7 +117,7 @@ export default function Home() {
 
       setMessages((prev) => [...prev, botReply]);
 
-      // 🗣️ Falar resposta da Lize
+      // 🗣️ Falar
       speak(botReply.text);
 
     } catch {
@@ -93,13 +151,18 @@ export default function Home() {
           <h1>Chat com Lize ✨</h1>
           <p>Sua assistente de aprendizado</p>
 
-          {/* BOTÃO DE VOZ */}
-          <button 
-            onClick={() => setVoiceEnabled(!voiceEnabled)} 
-            className="voiceToggle"
-          >
-            {voiceEnabled ? "🔊 Voz ligada" : "🔇 Voz desligada"}
-          </button>
+          <div className="headerButtons">
+            <button onClick={() => setVoiceEnabled(!voiceEnabled)} className="voiceToggle">
+              {voiceEnabled ? "🔊 Voz ligada" : "🔇 Voz desligada"}
+            </button>
+
+            <button 
+              onClick={startListening} 
+              className={`micButton ${listening ? "active" : ""}`}
+            >
+              {listening ? "🎤 Ouvindo..." : "🎙 Falar"}
+            </button>
+          </div>
         </div>
 
         {/* MENSAGENS */}
@@ -107,9 +170,7 @@ export default function Home() {
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`message ${
-                msg.sender === "user" ? "user" : "bot"
-              }`}
+              className={`message ${msg.sender === "user" ? "user" : "bot"}`}
             >
               {msg.text}
             </div>
@@ -123,9 +184,9 @@ export default function Home() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Digite sua mensagem..."
+            placeholder="Digite ou use o microfone..."
           />
-          <button onClick={sendMessage} disabled={loading}>
+          <button onClick={() => sendMessage()} disabled={loading}>
             {loading ? "..." : "Enviar ↵"}
           </button>
         </div>
@@ -160,19 +221,14 @@ export default function Home() {
           padding: 16px;
         }
 
-        .header h1 {
-          font-size: 20px;
-          margin: 0;
-        }
-
-        .header p {
-          font-size: 14px;
-          margin: 5px 0 0;
-          opacity: 0.9;
-        }
-
-        .voiceToggle {
+        .headerButtons {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
           margin-top: 10px;
+        }
+
+        .voiceToggle, .micButton {
           padding: 6px 10px;
           border-radius: 6px;
           border: none;
@@ -181,6 +237,11 @@ export default function Home() {
           color: #2563eb;
           font-size: 12px;
           font-weight: bold;
+        }
+
+        .micButton.active {
+          background: #ef4444;
+          color: white;
         }
 
         .messages {
@@ -198,13 +259,11 @@ export default function Home() {
           padding: 10px 14px;
           border-radius: 14px;
           font-size: 14px;
-          word-wrap: break-word;
         }
 
         .message.bot {
           align-self: flex-start;
           background: #e5e7eb;
-          color: #111827;
         }
 
         .message.user {
@@ -218,7 +277,6 @@ export default function Home() {
           padding: 10px;
           border-top: 1px solid #e5e7eb;
           gap: 8px;
-          background: white;
         }
 
         .inputBox input {
@@ -226,30 +284,19 @@ export default function Home() {
           padding: 10px;
           border-radius: 8px;
           border: 1px solid #d1d5db;
-          outline: none;
-        }
-
-        .inputBox input:focus {
-          border-color: #2563eb;
         }
 
         .inputBox button {
           padding: 10px 16px;
-          border: none;
           border-radius: 8px;
           background: #2563eb;
           color: white;
-          cursor: pointer;
-        }
-
-        .inputBox button:hover {
-          background: #1d4ed8;
+          border: none;
         }
 
         @media (max-width: 480px) {
           .chatBox {
             height: 95vh;
-            border-radius: 12px;
           }
         }
       `}</style>
