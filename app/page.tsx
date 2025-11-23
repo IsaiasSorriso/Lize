@@ -208,8 +208,7 @@ export default function Home() {
         .chatBox {
           background: white;
           width: 100%;
-          max-width: 450px;
-          height: 85vh;
+          height: 100vh;
           display: flex;
           flex-direction: column;
           border-radius: 16px;
