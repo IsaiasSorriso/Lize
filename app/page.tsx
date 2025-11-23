@@ -155,13 +155,6 @@ export default function Home() {
             <button onClick={() => setVoiceEnabled(!voiceEnabled)} className="voiceToggle">
               {voiceEnabled ? "🔊 Voz ligada" : "🔇 Voz desligada"}
             </button>
-
-            <button 
-              onClick={startListening} 
-              className={`micButton ${listening ? "active" : ""}`}
-            >
-              {listening ? "🎤" : "🎙"}
-            </button>
           </div>
         </div>
 
@@ -188,12 +181,12 @@ export default function Home() {
         />
 
         {/* BOTÃO DO MICROFONE */}
-        <button 
-          onClick={startListening} 
-          className={`micButtonBottom ${listening ? "active" : ""}`}
-        >
-          🎤
-        </button>
+       <button 
+              onClick={startListening} 
+              className={`micButton ${listening ? "active" : ""}`}
+            >
+              {listening ? "🎤" : "🎙"}
+            </button>
 
         <button onClick={() => sendMessage()} disabled={loading}>
           {loading ? "..." : "Enviar ↵"}
