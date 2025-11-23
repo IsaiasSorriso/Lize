@@ -1,0 +1,167 @@
+# 🧠 Diet-IA
+
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge\&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge\&logo=typescript)](https://www.typescriptlang.org/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991?style=for-the-badge\&logo=openai)](https://platform.openai.com/)
+[![Deploy](https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge\&logo=vercel)](https://vercel.com/)
+
+> 🥗 Geração automática de dietas semanais personalizadas com Inteligência Artificial — feita por **Bigode-AI** 💪
+
+---
+
+## 🚀 Sobre o Projeto
+
+**Diet-IA** é um app inteligente desenvolvido em **Next.js com TypeScript**, que utiliza o modelo **GPT-4o-mini** da **OpenAI** para gerar planos alimentares semanais personalizados de acordo com as informações do usuário.
+
+A IA — batizada de **Bigode-AI** — cria dietas completas em formato **Markdown legível**, com alimentos comuns no Brasil e sem uso de ultraprocessados.
+
+---
+
+## 🧩 Funcionalidades
+
+✅ Geração de dietas semanais (7 dias, 4 refeições/dia)
+✅ Ingredientes comuns no Brasil 🇧🇷
+✅ Interface 100% responsiva com TailwindCSS
+✅ Estrutura modular em TypeScript
+✅ Prompts inteligentes e personalizáveis
+✅ Integração direta com API da OpenAI
+
+---
+
+## ⚙️ Estrutura de Prompts
+
+### 🎛️ `buildSystemPrompt()`
+
+Define o comportamento fixo da IA:
+
+```ts
+export function buildSystemPrompt() {
+  return [
+    `Você é Bigode-AI, um agente de nutrição que cria planos semanais.
+    Regras fixas:
+    - Sempre responda em texto markdown legível para humanos
+    - Use # para títulos e - para itens de lista
+    - A dieta deve conter exatamente 7 dias
+    - Cada dia deve ter 4 refeições: café_da_manhã, almoço, lanche, jantar
+    - Ingredientes comuns no Brasil
+    - Evite ultraprocessados e contagem de calorias`
+  ].join("\n")
+}
+```
+
+### 👤 `buildUserPrompt()`
+
+Gera o contexto com base nos dados do usuário:
+
+```ts
+export function buildUserPrompt(input: DietaPlanRequest) {
+  return [
+    "Gere um plano alimentar personalizado com base nos dados:",
+    `- Nome: ${input.nome}`,
+    `- Idade: ${input.idade}`,
+    `- Altura em cm: ${input.altura_cm}`,
+    `- Peso em kg: ${input.peso_kg}`,
+    `- Sexo: ${input.sexo}`,
+    `- Nivel de atividade: ${input.nivel_atividade}`,
+    `- Objetivo: ${input.objetivo}`,
+  ].join("\n");
+}
+```
+
+---
+
+## 🧠 Tecnologias
+
+| Categoria     | Tecnologias                      |
+| ------------- | -------------------------------- |
+| **Front-end** | Next.js 14, React 18, TypeScript |
+| **Estilo**    | Tailwind CSS                     |
+| **IA**        | OpenAI GPT-4o-mini               |
+| **Validação** | Zod + React Hook Form            |
+| **Deploy**    | Vercel                           |
+| **Env Vars**  | dotenv / envsafe                 |
+
+---
+
+## 💾 Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/Rafael-M-Silva/Diet-IA.git
+
+# Acesse a pasta
+cd Diet-IA
+
+# Instale as dependências
+npm install
+
+# Crie um arquivo .env.local e adicione sua chave da OpenAI
+OPENAI_API_KEY=your_api_key_here
+```
+
+---
+
+## ▶️ Execução
+
+```bash
+npm run dev
+```
+
+Acesse o projeto em:
+👉 **[http://localhost:3000](http://localhost:3000)**
+
+---
+
+## 🧪 Exemplo de Saída
+
+```markdown
+# Plano alimentar semanal - Rafael
+
+## Segunda-feira
+- ☀️ Café da manhã: Omelete com aveia e banana  
+- 🍽️ Almoço: Arroz, feijão, frango grelhado e salada  
+- 🍎 Lanche: Pão integral com pasta de amendoim  
+- 🌙 Jantar: Macarrão integral com carne moída e legumes  
+
+## Terça-feira
+- ☀️ Café da manhã: Iogurte natural com granola e frutas  
+...
+```
+
+---
+
+## 📁 Estrutura de Pastas
+
+```
+📦 Diet-IA
+├── 📁 src
+│   ├── 📁 app            → Páginas do Next.js (App Router)
+│   ├── 📁 components     → Componentes de interface
+│   ├── 📁 lib            → Funções auxiliares (prompts, API)
+│   ├── 📁 types          → Tipagens TypeScript
+│   └── 📁 styles         → Tailwind e globais
+├── .env.local.example
+├── package.json
+└── README.md
+```
+
+---
+
+## 💡 Futuras Implementações
+
+* 📈 Dashboard com acompanhamento nutricional
+* 📊 Exportar dieta em PDF
+* 🤝 Chat interativo com Bigode-AI
+* 📱 App mobile com React Native
+
+---
+
+## 🧑‍💻 Autor
+
+**Rafael Maurício (Bigode)**
+👨‍🏫 Professor de ADS • 💻 Dev Front-End • 🎥 Criador do canal [BigodeEnsina](https://youtube.com/@bigodeensina)
+📍 [LinkedIn](https://linkedin.com/in/rafael-mauricio-dev)
+
+---
+
+> “Suplemento pra mente: código limpo e IA bem treinada.” 🧩
