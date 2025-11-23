@@ -160,7 +160,7 @@ export default function Home() {
               onClick={startListening} 
               className={`micButton ${listening ? "active" : ""}`}
             >
-              {listening ? "🎤 Ouvindo..." : "🎙 Falar"}
+              {listening ? "🎤" : "🎙"}
             </button>
           </div>
         </div>
@@ -179,17 +179,27 @@ export default function Home() {
         </div>
 
         {/* INPUT */}
-        <div className="inputBox">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Digite ou use o microfone..."
-          />
-          <button onClick={() => sendMessage()} disabled={loading}>
-            {loading ? "..." : "Enviar ↵"}
-          </button>
-        </div>
+      <div className="inputBox">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Digite ou use o microfone..."
+        />
+
+        {/* BOTÃO DO MICROFONE */}
+        <button 
+          onClick={startListening} 
+          className={`micButtonBottom ${listening ? "active" : ""}`}
+        >
+          🎤
+        </button>
+
+        <button onClick={() => sendMessage()} disabled={loading}>
+          {loading ? "..." : "Enviar ↵"}
+        </button>
+</div>
+
       </div>
 
       <style jsx>{`
