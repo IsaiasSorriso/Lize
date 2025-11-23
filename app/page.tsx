@@ -14,7 +14,25 @@ export default function Home() {
   ]);
 
   const [loading, setLoading] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // 🎤 Função de voz (TTS)
+  function speak(text: string) {
+    if (!voiceEnabled) return;
+
+    if ("speechSynthesis" in window) {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      utterance.lang = "pt-BR";
+      utterance.rate = 1;
+      utterance.pitch = 1;
+
+      synth.cancel();
+      synth.speak(utterance);
+    }
+  }
 
   async function sendMessage() {
     if (!input.trim()) return;
@@ -40,11 +58,19 @@ export default function Home() {
       };
 
       setMessages((prev) => [...prev, botReply]);
+
+      // 🗣️ Falar resposta da Lize
+      speak(botReply.text);
+
     } catch {
+      const errorMsg = "Erro de conexão 😢";
+
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "Erro de conexão 😢" },
+        { sender: "bot", text: errorMsg },
       ]);
+
+      speak(errorMsg);
     }
 
     setLoading(false);
@@ -66,6 +92,14 @@ export default function Home() {
         <div className="header">
           <h1>Chat com Lize ✨</h1>
           <p>Sua assistente de aprendizado</p>
+
+          {/* BOTÃO DE VOZ */}
+          <button 
+            onClick={() => setVoiceEnabled(!voiceEnabled)} 
+            className="voiceToggle"
+          >
+            {voiceEnabled ? "🔊 Voz ligada" : "🔇 Voz desligada"}
+          </button>
         </div>
 
         {/* MENSAGENS */}
@@ -119,7 +153,6 @@ export default function Home() {
           overflow: hidden;
         }
 
-        /* HEADER */
         .header {
           background: linear-gradient(135deg, #2563eb, #3b82f6);
           color: white;
@@ -138,7 +171,18 @@ export default function Home() {
           opacity: 0.9;
         }
 
-        /* MENSAGENS */
+        .voiceToggle {
+          margin-top: 10px;
+          padding: 6px 10px;
+          border-radius: 6px;
+          border: none;
+          cursor: pointer;
+          background: white;
+          color: #2563eb;
+          font-size: 12px;
+          font-weight: bold;
+        }
+
         .messages {
           flex: 1;
           padding: 15px;
@@ -169,7 +213,6 @@ export default function Home() {
           color: white;
         }
 
-        /* INPUT */
         .inputBox {
           display: flex;
           padding: 10px;
@@ -197,19 +240,12 @@ export default function Home() {
           background: #2563eb;
           color: white;
           cursor: pointer;
-          transition: 0.2s ease;
         }
 
         .inputBox button:hover {
           background: #1d4ed8;
         }
 
-        .inputBox button:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-
-        /* MOBILE */
         @media (max-width: 480px) {
           .chatBox {
             height: 95vh;
