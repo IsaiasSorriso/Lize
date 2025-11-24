@@ -1,146 +1,325 @@
-# 🤖 Lize IA — Chatbot Educacional com Acessibilidade
+# 🤖 Chatbot com IA em Next.js + OpenAI
 
-A **Lize IA** é um chatbot educacional desenvolvido em **Next.js + React**, com foco em **acessibilidade digital**, incluindo leitura de texto em voz alta, integração com **VLibras** e menu de acessibilidade.
-
----
-
-## 🚀 Funcionalidades
-
-- ✅ Chatbot educacional com interface moderna  
-- ✅ Design responsivo (Desktop e Mobile)  
-- ✅ Leitura de texto (Text-to-Speech)  
-- ✅ Leitura de texto selecionado  
-- ✅ Botão flutuante no lado esquerdo junto ao menu de acessibilidade  
-- ✅ Integração com **VLibras**  
-- ✅ Integração com **Sienna Accessibility**  
-- ✅ Pronto para deploy na **Vercel**
+Este projeto é um **chatbot com inteligência artificial** feito em **Next.js (App Router)** e pronto para deploy no **Vercel**.  
+Ele permite enviar mensagens de texto, receber respostas da IA e também conta com **botão de áudio (TTS)** direto no front, sem API externa para voz.
 
 ---
 
-## 🛠 Tecnologias utilizadas
+## 🚀 Tecnologias usadas
 
-- Next.js 14  
-- React  
-- TypeScript  
-- Tailwind CSS  
-- Shadcn/UI  
-- Web Speech API (TTS)  
-- VLibras  
-- Sienna Accessibility  
-- Vercel  
+- Next.js 14+
+- React
+- OpenAI API
+- Web Speech API (Text-to-Speech no navegador)
+- Vercel
 
 ---
 
-## 📂 Estrutura do Projeto
+## 📦 Requisitos
 
-📦 lize-ia
-┣ 📂 src
-┃ ┣ 📂 app
-┃ ┃ ┣ 📂 api
-┃ ┃ ┃ ┗ 📜 chat/route.ts
-┃ ┃ ┣ 📜 layout.tsx
-┃ ┃ ┗ 📜 page.tsx
-┃ ┣ 📂 components
-┃ ┃ ┣ 📜 ExpandableChatDemo.tsx
-┃ ┃ ┣ 📜 AccessibilityTools.tsx
-┃ ┃ ┣ 📂 ui/
-┣ 📜 .env.local
-┣ 📜 package.json
-┣ 📜 tsconfig.json
-┗ 📜 README.md
+- Node.js 18+
+- Conta na OpenAI
+- Conta no Vercel
+
+---
+
+## 📁 Estrutura do projeto
+
+/app
+├─ /api
+│ └─ /chat
+│ └─ route.ts # Backend da IA
+│
+├─ /page.tsx # Front do chatbot
+│
+/styles
+└─ globals.css
+
+.env.local
 
 yaml
 Copy code
 
 ---
 
-## 💻 Como rodar localmente
+## 🔑 Configurando a OpenAI
 
-### 1. Clone o repositório
+Crie o arquivo `.env.local` na raiz:
 
-```bash
-git clone https://github.com/SEU-USUARIO/lize-ia.git
-cd lize-ia
-2. Instale as dependências
+```env
+OPENAI_API_KEY=sk-sua-chave-aqui
+👉 Pegue sua chave em:
+https://platform.openai.com/api-keys
+
+⚙️ Backend da IA (/app/api/chat/route.ts)
+ts
+Copy code
+import OpenAI from "openai";
+import { NextResponse } from "next/server";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+export async function POST(req: Request) {
+  try {
+    const { message } = await req.json();
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4.1-mini",
+      messages: [
+        { role: "system", content: "Você é um assistente útil e educado." },
+        { role: "user", content: message }
+      ],
+    });
+
+    const response = completion.choices[0].message.content;
+
+    return NextResponse.json({ response });
+
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { response: "Erro ao se conectar com a IA." },
+      { status: 500 }
+    );
+  }
+}
+💬 Front do Chat (/app/page.tsx)
+Inclui:
+
+UI estilizada
+
+Mensagens de usuário e IA
+
+Botão de áudio (TTS)
+
+Botão lateral estilo menu acessibilidade
+
+tsx
+Copy code
+"use client";
+
+import { useState } from "react";
+
+export default function Home() {
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<
+    { sender: string; text: string }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+
+  function speak(text: string) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "pt-BR";
+    speechSynthesis.speak(utterance);
+  }
+
+  async function sendMessage() {
+    if (!input) return;
+
+    setLoading(true);
+
+    setMessages((prev) => [
+      ...prev,
+      { sender: "Você", text: input }
+    ]);
+
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: input })
+    });
+
+    const data = await res.json();
+
+    setMessages((prev) => [
+      ...prev,
+      { sender: "IA", text: data.response }
+    ]);
+
+    setInput("");
+    setLoading(false);
+  }
+
+  return (
+    <div className="container">
+
+      {/* Botão lateral estilo acessibilidade */}
+      <div className="side-menu">
+        🔊
+      </div>
+
+      <div className="chat-box">
+        <h1>Chat com IA</h1>
+
+        <div className="messages">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={
+                msg.sender === "Você" ? "msg user" : "msg bot"
+              }
+            >
+              <b>{msg.sender}:</b> {msg.text}
+
+              {msg.sender === "IA" && (
+                <button
+                  onClick={() => speak(msg.text)}
+                  className="tts-btn"
+                >
+                  🔊
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="input-area">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Digite sua mensagem..."
+          />
+          <button onClick={sendMessage}>
+            {loading ? "..." : "Enviar"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+🎨 Estilo Base (/styles/globals.css)
+css
+Copy code
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+.container {
+  display: flex;
+}
+
+.side-menu {
+  width: 60px;
+  background: #1e293b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.chat-box {
+  flex: 1;
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.messages {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 8px;
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.msg {
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.user {
+  background: #2563eb;
+  align-self: flex-end;
+}
+
+.bot {
+  background: #334155;
+}
+
+.tts-btn {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+}
+
+.input-area {
+  display: flex;
+  gap: 8px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 700px) {
+  .side-menu {
+    display: none;
+  }
+}
+🧪 Rodando localmente
 bash
 Copy code
 npm install
-3. Configure o ambiente
-Crie o arquivo .env.local:
-
-env
-Copy code
-OPENAI_API_KEY=SUA_CHAVE_AQUI
-4. Rode o projeto
-bash
-Copy code
 npm run dev
-Acesse em:
+Acesse:
 
 arduino
 Copy code
 http://localhost:3000
-🌍 Deploy na Vercel
-Suba o projeto no GitHub
+☁️ Deploy no Vercel
+Suba o projeto no GitHub.
 
-Vá até: https://vercel.com
+Vá em: https://vercel.com
 
-Clique em New Project
+Clique em Import Project.
 
-Importe seu repositório
+Configure a variável:
 
-Em Environment Variables, adicione:
+OPENAI_API_KEY
 
-env
-Copy code
-OPENAI_API_KEY=SUA_CHAVE_AQUI
-Clique em Deploy
+Clique em Deploy.
 
-♿ Recursos de Acessibilidade
-🧏 VLibras
-Integração com o plugin oficial do VLibras, permitindo tradução do conteúdo do site para Libras.
+✅ Funcionalidades
+✅ Chat com IA
 
-Botão flutuante oficial
+✅ Enviar texto
 
-Widget dinâmico carregado via script
+✅ Resposta em tempo real
 
-Compatível com Vercel
+✅ Botão de ouvir resposta (TTS)
 
-🎛 Sienna Accessibility
-Menu de acessibilidade com:
+✅ Interface moderna
 
-Aumento/redução de fonte
+✅ Botão lateral de acessibilidade
 
-Contraste alto
+✅ Responsivo
 
-Navegação assistiva
-
-Leitura facilitada
-
-O menu fica fixo no lado esquerdo da tela, junto ao botão de leitura.
-
-🔊 Leitura de Texto (TTS)
-Leitura de qualquer texto selecionado
-
-Botão flutuante no lado esquerdo
-
-Usa a Web Speech API
-
-Compatível com Chrome, Edge e Firefox
-
-📌 Como usar
-Acesse o site
-
-Clique no botão flutuante da Lize 🤖
-
-Digite sua dúvida
-
-Para ouvir algum texto:
-
-Selecione o texto na tela
-
-Clique no botão de áudio 🔊 no lado esquerdo
-
-📄 Licença
-Este projeto está sob a licença MIT.
-Você pode usar, modificar e distribuir livremente.
+✅ Pronto para Vercel
