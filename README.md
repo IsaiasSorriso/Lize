@@ -1,4 +1,4 @@
-# 🤖 Chatbot com IA em Next.js + OpenAI
+# 🤖 LIZE 
 
 Este projeto é um **chatbot com inteligência artificial** feito em **Next.js (App Router)** e pronto para deploy no **Vercel**.  
 Ele permite enviar mensagens de texto, receber respostas da IA e também conta com **botão de áudio (TTS)** direto no front, sem API externa para voz.
