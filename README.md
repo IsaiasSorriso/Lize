@@ -1,146 +1,146 @@
-🤖 Lize IA — Chatbot Educacional com Acessibilidade
+# 🤖 Lize IA — Chatbot Educacional com Acessibilidade
 
-Projeto de chatbot educacional desenvolvido em Next.js + React, com foco em acessibilidade digital, integração com VLibras, leitura de texto (TTS) e interface moderna.
+A **Lize IA** é um chatbot educacional desenvolvido em **Next.js + React**, com foco em **acessibilidade digital**, incluindo leitura de texto em voz alta, integração com **VLibras** e menu de acessibilidade.
 
-A Lize foi criada para auxiliar estudantes, com recursos inclusivos que permitem maior acessibilidade para pessoas com deficiência visual e auditiva.
+---
 
-🚀 Funcionalidades
+## 🚀 Funcionalidades
 
-✅ Chatbot com interface moderna
-✅ Design responsivo
-✅ Leitura de texto em voz alta (Text To Speech)
-✅ Leitura de texto selecionado
-✅ Botão flutuante de acessibilidade
-✅ Integração com VLibras
-✅ Integração com Sienna Accessibility
-✅ Pronto para deploy na Vercel
+- ✅ Chatbot educacional com interface moderna  
+- ✅ Design responsivo (Desktop e Mobile)  
+- ✅ Leitura de texto (Text-to-Speech)  
+- ✅ Leitura de texto selecionado  
+- ✅ Botão flutuante no lado esquerdo junto ao menu de acessibilidade  
+- ✅ Integração com **VLibras**  
+- ✅ Integração com **Sienna Accessibility**  
+- ✅ Pronto para deploy na **Vercel**
 
-🛠️ Tecnologias utilizadas
+---
 
-Next.js 14
+## 🛠 Tecnologias utilizadas
 
-React
+- Next.js 14  
+- React  
+- TypeScript  
+- Tailwind CSS  
+- Shadcn/UI  
+- Web Speech API (TTS)  
+- VLibras  
+- Sienna Accessibility  
+- Vercel  
 
-TypeScript
+---
 
-Tailwind CSS
+## 📂 Estrutura do Projeto
 
-Shadcn/UI
-
-Web Speech API (TTS)
-
-VLibras
-
-Sienna Accessibility
-
-Vercel
-
-📂 Estrutura do projeto
 📦 lize-ia
- ┣ 📂 src
- ┃ ┣ 📂 app
- ┃ ┃ ┣ 📂 api
- ┃ ┃ ┃ ┗ 📜 chat/route.ts
- ┃ ┃ ┣ 📜 layout.tsx
- ┃ ┃ ┗ 📜 page.tsx
- ┃ ┣ 📂 components
- ┃ ┃ ┣ 📜 ExpandableChatDemo.tsx
- ┃ ┃ ┣ 📜 AccessibilityTools.tsx
- ┃ ┃ ┣ 📂 ui/
- ┣ 📜 .env.local
- ┣ 📜 package.json
- ┣ 📜 README.md
- ┗ 📜 tsconfig.json
+┣ 📂 src
+┃ ┣ 📂 app
+┃ ┃ ┣ 📂 api
+┃ ┃ ┃ ┗ 📜 chat/route.ts
+┃ ┃ ┣ 📜 layout.tsx
+┃ ┃ ┗ 📜 page.tsx
+┃ ┣ 📂 components
+┃ ┃ ┣ 📜 ExpandableChatDemo.tsx
+┃ ┃ ┣ 📜 AccessibilityTools.tsx
+┃ ┃ ┣ 📂 ui/
+┣ 📜 .env.local
+┣ 📜 package.json
+┣ 📜 tsconfig.json
+┗ 📜 README.md
 
-📥 Como rodar o projeto
-1️⃣ Clone o repositório
+yaml
+Copy code
+
+---
+
+## 💻 Como rodar localmente
+
+### 1. Clone o repositório
+
+```bash
 git clone https://github.com/SEU-USUARIO/lize-ia.git
 cd lize-ia
-
-2️⃣ Instale as dependências
+2. Instale as dependências
+bash
+Copy code
 npm install
-# ou
-yarn install
+3. Configure o ambiente
+Crie o arquivo .env.local:
 
-3️⃣ Configure o ambiente
-
-Crie um arquivo .env.local na raiz:
-
+env
+Copy code
 OPENAI_API_KEY=SUA_CHAVE_AQUI
-
-
-Mesmo que você use só front em algumas partes, se o backend usar a OpenAI, isso é obrigatório.
-
-4️⃣ Inicie o servidor
+4. Rode o projeto
+bash
+Copy code
 npm run dev
+Acesse em:
 
-
-O projeto vai rodar em:
-
+arduino
+Copy code
 http://localhost:3000
+🌍 Deploy na Vercel
+Suba o projeto no GitHub
 
-🌐 Deploy na Vercel
-
-Suba o projeto para o GitHub
-
-Acesse: https://vercel.com
+Vá até: https://vercel.com
 
 Clique em New Project
 
-Conecte o repositório
+Importe seu repositório
 
-Em Environment Variables adicione:
+Em Environment Variables, adicione:
 
-OPENAI_API_KEY = sua_chave
-
-
+env
+Copy code
+OPENAI_API_KEY=SUA_CHAVE_AQUI
 Clique em Deploy
 
-♿ Acessibilidade
+♿ Recursos de Acessibilidade
+🧏 VLibras
+Integração com o plugin oficial do VLibras, permitindo tradução do conteúdo do site para Libras.
 
-O projeto inclui:
+Botão flutuante oficial
 
-🔊 Leitor de Texto (TTS)
+Widget dinâmico carregado via script
+
+Compatível com Vercel
+
+🎛 Sienna Accessibility
+Menu de acessibilidade com:
+
+Aumento/redução de fonte
+
+Contraste alto
+
+Navegação assistiva
+
+Leitura facilitada
+
+O menu fica fixo no lado esquerdo da tela, junto ao botão de leitura.
+
+🔊 Leitura de Texto (TTS)
+Leitura de qualquer texto selecionado
 
 Botão flutuante no lado esquerdo
 
-Lê automaticamente textos selecionados
+Usa a Web Speech API
 
-Usa Web Speech API nativa do navegador
-
-🧏 VLibras
-
-Tradutor automático para Libras
-
-Plugin oficial do governo
-
-Inicializado direto no componente AccessibilityTools.tsx
-
-🎛️ Sienna Accessibility
-
-Ferramentas de contraste
-
-Aumento de fonte
-
-Navegação acessível
+Compatível com Chrome, Edge e Firefox
 
 📌 Como usar
+Acesse o site
 
-Abra o site
+Clique no botão flutuante da Lize 🤖
 
-Clique no botão da Lize 💬
+Digite sua dúvida
 
-Digite sua pergunta
+Para ouvir algum texto:
 
-Para ouvir um texto:
+Selecione o texto na tela
 
-Selecione qualquer texto da tela
-
-Ou clique no botão 🔊 "Ler texto"
-
-🖼️ Preview
+Clique no botão de áudio 🔊 no lado esquerdo
 
 📄 Licença
-
 Este projeto está sob a licença MIT.
 Você pode usar, modificar e distribuir livremente.
