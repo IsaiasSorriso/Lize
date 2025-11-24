@@ -1,36 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🤖 Lize IA — Chatbot Educacional com Acessibilidade
 
-## Getting Started
+Projeto de chatbot educacional desenvolvido em Next.js + React, com foco em acessibilidade digital, integração com VLibras, leitura de texto (TTS) e interface moderna.
 
-First, run the development server:
+A Lize foi criada para auxiliar estudantes, com recursos inclusivos que permitem maior acessibilidade para pessoas com deficiência visual e auditiva.
 
-```bash
+🚀 Funcionalidades
+
+✅ Chatbot com interface moderna
+✅ Design responsivo
+✅ Leitura de texto em voz alta (Text To Speech)
+✅ Leitura de texto selecionado
+✅ Botão flutuante de acessibilidade
+✅ Integração com VLibras
+✅ Integração com Sienna Accessibility
+✅ Pronto para deploy na Vercel
+
+🛠️ Tecnologias utilizadas
+
+Next.js 14
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+Shadcn/UI
+
+Web Speech API (TTS)
+
+VLibras
+
+Sienna Accessibility
+
+Vercel
+
+📂 Estrutura do projeto
+📦 lize-ia
+ ┣ 📂 src
+ ┃ ┣ 📂 app
+ ┃ ┃ ┣ 📂 api
+ ┃ ┃ ┃ ┗ 📜 chat/route.ts
+ ┃ ┃ ┣ 📜 layout.tsx
+ ┃ ┃ ┗ 📜 page.tsx
+ ┃ ┣ 📂 components
+ ┃ ┃ ┣ 📜 ExpandableChatDemo.tsx
+ ┃ ┃ ┣ 📜 AccessibilityTools.tsx
+ ┃ ┃ ┣ 📂 ui/
+ ┣ 📜 .env.local
+ ┣ 📜 package.json
+ ┣ 📜 README.md
+ ┗ 📜 tsconfig.json
+
+📥 Como rodar o projeto
+1️⃣ Clone o repositório
+git clone https://github.com/SEU-USUARIO/lize-ia.git
+cd lize-ia
+
+2️⃣ Instale as dependências
+npm install
+# ou
+yarn install
+
+3️⃣ Configure o ambiente
+
+Crie um arquivo .env.local na raiz:
+
+OPENAI_API_KEY=SUA_CHAVE_AQUI
+
+
+Mesmo que você use só front em algumas partes, se o backend usar a OpenAI, isso é obrigatório.
+
+4️⃣ Inicie o servidor
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+O projeto vai rodar em:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+http://localhost:3000
 
-## Learn More
+🌐 Deploy na Vercel
 
-To learn more about Next.js, take a look at the following resources:
+Suba o projeto para o GitHub
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Acesse: https://vercel.com
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Clique em New Project
 
-## Deploy on Vercel
+Conecte o repositório
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Em Environment Variables adicione:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+OPENAI_API_KEY = sua_chave
+
+
+Clique em Deploy
+
+♿ Acessibilidade
+
+O projeto inclui:
+
+🔊 Leitor de Texto (TTS)
+
+Botão flutuante no lado esquerdo
+
+Lê automaticamente textos selecionados
+
+Usa Web Speech API nativa do navegador
+
+🧏 VLibras
+
+Tradutor automático para Libras
+
+Plugin oficial do governo
+
+Inicializado direto no componente AccessibilityTools.tsx
+
+🎛️ Sienna Accessibility
+
+Ferramentas de contraste
+
+Aumento de fonte
+
+Navegação acessível
+
+📌 Como usar
+
+Abra o site
+
+Clique no botão da Lize 💬
+
+Digite sua pergunta
+
+Para ouvir um texto:
+
+Selecione qualquer texto da tela
+
+Ou clique no botão 🔊 "Ler texto"
+
+🖼️ Preview
+
+📄 Licença
+
+Este projeto está sob a licença MIT.
+Você pode usar, modificar e distribuir livremente.
